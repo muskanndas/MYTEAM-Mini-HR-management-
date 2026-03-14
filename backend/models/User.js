@@ -36,6 +36,14 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 20,
     min: [0, 'Leave balance cannot be negative']
+  },
+  otp: {
+    type: String,
+    select: false
+  },
+  otpExpiry: {
+    type: Date,
+    select: false
   }
 }, {
   timestamps: true
