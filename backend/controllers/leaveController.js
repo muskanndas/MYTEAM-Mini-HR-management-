@@ -1,59 +1,102 @@
-import Leave from '../models/Leave.js';
+import Leave from "../models/Leave.js";
+import User from "../models/User.js";
 
 // Apply for Leave controller
 export const applyLeave = async (req, res) => {
   try {
+    // Validate user authentication
+    if (!req.userId) {
+      return res.status(401).json({
+        message: "User not authenticated. Please login to apply for leave."
+      });
+    }
+
+    // Check if user exists in database
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found. Please register or login again."
+      });
+    }
+
     const { leaveType, startDate, endDate, reason } = req.body;
 
     // Validate required fields
     if (!leaveType || !startDate || !endDate || !reason) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({
+        message: "All fields are required"
+      });
     }
 
-    // Validate leave dates
+    // Convert to Date objects
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    if (start >= end) {
+    // Validate leave date range
+    if (start > end) {
       return res.status(400).json({
         message: "Start date must be before end date"
       });
     }
 
-    // Calculate total days
-    const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    // Prevent overlapping leave
+    const overlappingLeave = await Leave.findOne({
+      userId: req.userId,
+      $or: [
+        { startDate: { $lt: start }, endDate: { $gt: start } },  // New leave starts during existing leave
+        { startDate: { $lt: end }, endDate: { $gt: end } },    // New leave ends during existing leave
+        { startDate: { $gte: start }, endDate: { $lte: end } }  // New leave is completely within existing leave
+      ]
+    });
 
-    // Create leave request
-    const leave = new Leave({
+    if (overlappingLeave) {
+      return res.status(400).json({
+        message: "Leave already exists for selected dates"
+      });
+    }
+
+    // Calculate total days
+    const totalDays =
+      Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+    // Create leave request with validated user ID
+    const leave = await Leave.create({
       userId: req.userId,
       leaveType,
       startDate,
       endDate,
       totalDays,
-      status: 'Pending',
+      status: "Pending",
       reason
     });
 
-    await leave.save();
-
-    res.status(201).json(leave);
+    res.status(201).json({
+      message: "Leave applied successfully",
+      leave
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: "Server error"
+    });
   }
 };
+
 
 // Get My Leaves controller
 export const getMyLeaves = async (req, res) => {
   try {
-    // Get all leaves of logged-in user
     const leaves = await Leave.find({ userId: req.userId })
+      .populate("userId", "fullName email")
       .sort({ appliedDate: -1 });
 
     res.json(leaves);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: "Server error"
+    });
   }
 };
+
 
 // Update Leave controller
 export const updateLeave = async (req, res) => {
@@ -61,15 +104,23 @@ export const updateLeave = async (req, res) => {
     const { id } = req.params;
     const { leaveType, startDate, endDate, reason } = req.body;
 
-    // Find leave request
-    const leave = await Leave.findOne({ _id: id, userId: req.userId });
+    // Find leave belonging to logged-in user
+    const leave = await Leave.findOne({
+      _id: id,
+      userId: req.userId
+    });
+
     if (!leave) {
-      return res.status(404).json({ message: 'Leave not found' });
+      return res.status(404).json({
+        message: "Leave not found"
+      });
     }
 
-    // Check if leave is pending
-    if (leave.status !== 'Pending') {
-      return res.status(400).json({ message: 'Can only update pending leave requests' });
+    // Only pending leaves can be updated
+    if (leave.status !== "Pending") {
+      return res.status(400).json({
+        message: "Can only update pending leave requests"
+      });
     }
 
     // Calculate total days if dates changed
@@ -77,7 +128,15 @@ export const updateLeave = async (req, res) => {
     if (startDate || endDate) {
       const start = new Date(startDate || leave.startDate);
       const end = new Date(endDate || leave.endDate);
-      totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+      if (start > end) {
+        return res.status(400).json({
+          message: "Start date must be before end date"
+        });
+      }
+
+      totalDays =
+        Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
     }
 
     // Update leave
@@ -91,35 +150,47 @@ export const updateLeave = async (req, res) => {
         reason: reason || leave.reason
       },
       { new: true }
-    );
+    ).populate("userId", "fullName email");
 
     res.json(updatedLeave);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: "Server error"
+    });
   }
 };
+
 
 // Delete Leave controller
 export const deleteLeave = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Find leave request
-    const leave = await Leave.findOne({ _id: id, userId: req.userId });
+    const leave = await Leave.findOne({
+      _id: id,
+      userId: req.userId
+    });
+
     if (!leave) {
-      return res.status(404).json({ message: 'Leave not found' });
+      return res.status(404).json({
+        message: "Leave not found"
+      });
     }
 
-    // Check if leave is pending
-    if (leave.status !== 'Pending') {
-      return res.status(400).json({ message: 'Can only delete pending leave requests' });
+    if (leave.status !== "Pending") {
+      return res.status(400).json({
+        message: "Can only delete pending leave requests"
+      });
     }
 
-    // Delete leave
     await Leave.findByIdAndDelete(id);
 
-    res.json({ message: 'Leave deleted successfully' });
+    res.json({
+      message: "Leave deleted successfully"
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: "Server error"
+    });
   }
 };
