@@ -1,11 +1,24 @@
 import Leave from '../models/Leave.js';
 import User from '../models/User.js';
 
-// Get All Leaves controller
+// Get All Leaves
 export const getAllLeaves = async (req, res) => {
   try {
-    // Fetch all leave requests with user details
-    const leaves = await Leave.find({})
+    // Build query filters
+    const query = {};
+    
+    // Filter by status
+    if (req.query.status) {
+      query.status = req.query.status;
+    }
+    
+    // Filter by employee
+    if (req.query.employeeId) {
+      query.userId = req.query.employeeId;
+    }
+
+    // Fetch all leave requests with filters and user details
+    const leaves = await Leave.find(query)
       .populate('userId', 'fullName email')
       .sort({ appliedDate: -1 });
 

@@ -5,9 +5,22 @@ export const applyLeave = async (req, res) => {
   try {
     const { leaveType, startDate, endDate, reason } = req.body;
 
-    // Calculate total days
+    // Validate required fields
+    if (!leaveType || !startDate || !endDate || !reason) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Validate leave dates
     const start = new Date(startDate);
     const end = new Date(endDate);
+
+    if (start >= end) {
+      return res.status(400).json({
+        message: "Start date must be before end date"
+      });
+    }
+
+    // Calculate total days
     const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
 
     // Create leave request
