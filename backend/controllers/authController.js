@@ -11,7 +11,7 @@ const generateOTP = () => {
 // Register User controller
 export const registerUser = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, role = 'employee' } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -26,14 +26,10 @@ export const registerUser = async (req, res) => {
     const user = await User.create({
       fullName,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      role  // Allow role specification
     });
 
-    if (!fullName || !email || !password) {
-  return res.status(400).json({
-    message: "All fields are required"
-  });
-}
     // Return user without password
     const userResponse = {
       _id: user._id,
