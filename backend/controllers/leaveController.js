@@ -1,6 +1,6 @@
 import Leave from '../models/Leave.js';
 
-// Apply for Leave
+// Apply for Leave controller
 export const applyLeave = async (req, res) => {
   try {
     const { leaveType, startDate, endDate, reason } = req.body;
@@ -29,7 +29,7 @@ export const applyLeave = async (req, res) => {
   }
 };
 
-// Get My Leaves
+// Get My Leaves controller
 export const getMyLeaves = async (req, res) => {
   try {
     // Get all leaves of logged-in user
@@ -42,7 +42,7 @@ export const getMyLeaves = async (req, res) => {
   }
 };
 
-// Update Leave
+// Update Leave controller
 export const updateLeave = async (req, res) => {
   try {
     const { id } = req.params;
@@ -86,7 +86,7 @@ export const updateLeave = async (req, res) => {
   }
 };
 
-// Delete Leave
+// Delete Leave controller
 export const deleteLeave = async (req, res) => {
   try {
     const { id } = req.params;
