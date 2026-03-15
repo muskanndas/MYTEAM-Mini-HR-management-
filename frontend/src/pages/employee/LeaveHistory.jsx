@@ -85,7 +85,7 @@ function LeaveHistory() {
         <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
           <div className="border-b border-gray-200 px-4 py-3">
             <h2 className="text-xl font-semibold text-gray-800">Leave History</h2>
-            <p className="mt-1 text-sm text-gray-500">View and manage your leave requests.</p>
+            {/* <p className="mt-1 text-sm text-gray-500">View and manage your leave requests.</p> */}
           </div>
         {error && (
           <div className="mx-4 mt-4">

@@ -40,9 +40,7 @@ function ApplyLeave() {
         <LeaveBalanceCard />
         <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-semibold text-gray-800">Apply for Leave</h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Select leave type, dates and reason. Total days are calculated automatically.
-          </p>
+          
         {success && (
           <Alert type="success" message={success} className="mt-4" />
         )}

@@ -37,7 +37,7 @@ app.use((err, req, res, next) => {
 
 // Basic route for testing
 app.get('/', (req, res) => {
-  res.json({ message: 'Mini HR Management System API is running' });
+  res.json({ message: 'MyTeam Management System API is running' });
 });
 
 const PORT = process.env.PORT || 5000;

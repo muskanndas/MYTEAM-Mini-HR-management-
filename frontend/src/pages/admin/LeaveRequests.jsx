@@ -59,7 +59,7 @@ function LeaveRequests() {
       .put(`/admin/leaves/${leaveId}`, { status })
       .then(() => {
         fetchLeaves();
-        toast.success(status === 'Approved' ? 'Leave approved.' : 'Leave rejected.');
+        toast.success(status === 'Approved' ? 'Status updated to Approved.' : 'Status updated to Rejected.');
       })
       .catch((err) => {
         const msg = err.response?.data?.message || 'Failed to update leave status.';
@@ -75,7 +75,7 @@ function LeaveRequests() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-xl font-semibold text-gray-800">Leave Requests</h2>
-            <p className="mt-1 text-sm text-gray-500">Approve or reject employee leave requests.</p>
+            <p className="mt-1 text-sm text-gray-500">Approve or reject leave requests. You can change status anytime (e.g. revert Approved to Rejected).</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <select
@@ -159,26 +159,24 @@ function LeaveRequests() {
                           {leave.reason || '—'}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 text-right text-sm">
-                          {leave.status === 'Pending' && (
-                            <span className="flex justify-end gap-2">
-                              <button
-                                type="button"
-                                disabled={actioningId === leave._id}
-                                onClick={() => handleStatusUpdate(leave._id, 'Approved')}
-                                className="font-medium text-emerald-600 hover:text-emerald-500 disabled:opacity-50"
-                              >
-                                {actioningId === leave._id ? '...' : 'Approve'}
-                              </button>
-                              <button
-                                type="button"
-                                disabled={actioningId === leave._id}
-                                onClick={() => handleStatusUpdate(leave._id, 'Rejected')}
-                                className="font-medium text-red-600 hover:text-red-500 disabled:opacity-50"
-                              >
-                                Reject
-                              </button>
-                            </span>
-                          )}
+                          <span className="flex justify-end gap-2">
+                            <button
+                              type="button"
+                              disabled={actioningId === leave._id || leave.status === 'Approved'}
+                              onClick={() => handleStatusUpdate(leave._id, 'Approved')}
+                              className="font-medium text-emerald-600 hover:text-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              {actioningId === leave._id ? '...' : 'Approve'}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={actioningId === leave._id || leave.status === 'Rejected'}
+                              onClick={() => handleStatusUpdate(leave._id, 'Rejected')}
+                              className="font-medium text-red-600 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              Reject
+                            </button>
+                          </span>
                         </td>
                       </tr>
                     );

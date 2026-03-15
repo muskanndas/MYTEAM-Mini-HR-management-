@@ -5,7 +5,13 @@ export default {
     "./src/**/*.{js,jsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      borderRadius: { '2xl': '1rem' },
+      boxShadow: {
+        'soft': '0 2px 8px rgba(0,0,0,0.06)',
+        'soft-lg': '0 4px 16px rgba(0,0,0,0.08)',
+      },
+    },
   },
   plugins: [],
 };

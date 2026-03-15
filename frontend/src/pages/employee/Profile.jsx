@@ -22,7 +22,7 @@ function Profile() {
   if (!user) {
     return (
       <DashboardLayout title="Profile">
-        <div className="rounded-lg bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-gray-200/80 bg-white p-6 shadow-soft">
           <p className="text-gray-500">Loading profile...</p>
         </div>
       </DashboardLayout>
@@ -34,7 +34,7 @@ function Profile() {
   return (
     <DashboardLayout title="Profile">
       <div className="space-y-6">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-gray-200/80 bg-white p-6 shadow-soft">
           <h2 className="text-xl font-semibold text-gray-800">Profile</h2>
           <dl className="mt-4 grid gap-3 sm:grid-cols-2">
             <div>

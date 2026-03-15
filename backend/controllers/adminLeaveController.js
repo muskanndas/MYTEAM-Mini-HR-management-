@@ -28,7 +28,7 @@ export const getAllLeaves = async (req, res) => {
   }
 };
 
-// Update Leave Status controller
+// Update Leave Status controller (admin can update from any status; balance adjusted accordingly)
 export const updateLeaveStatus = async (req, res) => {
   try {
     const { leaveId } = req.params;
@@ -44,26 +44,40 @@ export const updateLeaveStatus = async (req, res) => {
       return res.status(404).json({ message: "Leave not found" });
     }
 
-    // Prevent double approval
-    if (leave.status !== "Pending") {
-      return res.status(400).json({
-        message: "Leave already processed"
-      });
+    const wasApproved = leave.status === "Approved";
+    const willBeApproved = status === "Approved";
+
+    // No change
+    if (leave.status === status) {
+      const updatedLeave = await Leave.findById(leaveId)
+        .populate("userId", "fullName email");
+      return res.json(updatedLeave);
+    }
+
+    const user = await User.findById(leave.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Reverting Approved -> Rejected: add days back to balance
+    if (wasApproved && !willBeApproved) {
+      user.leaveBalance += leave.totalDays;
+      await user.save();
+    }
+
+    // Approving (from Pending or Rejected): deduct days from balance
+    if (!wasApproved && willBeApproved) {
+      if (user.leaveBalance < leave.totalDays) {
+        return res.status(400).json({
+          message: "Insufficient leave balance to approve this request"
+        });
+      }
+      user.leaveBalance -= leave.totalDays;
+      await user.save();
     }
 
     leave.status = status;
     await leave.save();
-
-    if (status === "Approved") {
-
-      const user = await User.findById(leave.userId);
-
-      if (user) {
-        user.leaveBalance -= leave.totalDays;
-        await user.save();
-      }
-
-    }
 
     const updatedLeave = await Leave.findById(leaveId)
       .populate("userId", "fullName email");

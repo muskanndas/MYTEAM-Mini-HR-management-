@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { HiOutlinePlus, HiOutlineClipboardCheck, HiOutlineClock, HiOutlineCalendar } from 'react-icons/hi';
 import { DashboardLayout } from '../../components/layout';
 import { StatusBadge, LeaveBalanceCard, LoadingSpinner, Alert } from '../../components/ui';
 import { useAuth } from '../../context/AuthContext';
@@ -61,45 +62,37 @@ function Dashboard() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Link
             to="/employee/apply-leave"
-            className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow"
+            className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-white p-4 shadow-soft transition-all duration-200 hover:shadow-soft-lg hover:border-indigo-200 hover:-translate-y-0.5"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
+              <HiOutlinePlus className="h-5 w-5" />
             </span>
             <span className="font-medium text-gray-800">Apply Leave</span>
           </Link>
           <Link
             to="/employee/attendance"
-            className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow"
+            className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-white p-4 shadow-soft transition-all duration-200 hover:shadow-soft-lg hover:border-emerald-200 hover:-translate-y-0.5"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
+              <HiOutlineClipboardCheck className="h-5 w-5" />
             </span>
             <span className="font-medium text-gray-800">Mark Attendance</span>
           </Link>
           <Link
             to="/employee/leave-history"
-            className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow"
+            className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-white p-4 shadow-soft transition-all duration-200 hover:shadow-soft-lg hover:border-amber-200 hover:-translate-y-0.5"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+              <HiOutlineClock className="h-5 w-5" />
             </span>
             <span className="font-medium text-gray-800">Leave History</span>
           </Link>
           <Link
             to="/employee/attendance-history"
-            className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow"
+            className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-white p-4 shadow-soft transition-all duration-200 hover:shadow-soft-lg hover:border-sky-200 hover:-translate-y-0.5"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 text-sky-600">
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-sky-600">
+              <HiOutlineCalendar className="h-5 w-5" />
             </span>
             <span className="font-medium text-gray-800">Attendance History</span>
           </Link>
@@ -107,8 +100,8 @@ function Dashboard() {
 
         {/* Recent leave requests & attendance */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+          <div className="rounded-xl border border-gray-200/80 bg-white shadow-soft overflow-hidden">
+            <div className="border-b border-gray-200/80 px-4 py-3 flex items-center justify-between bg-gray-50/50">
               <h3 className="font-semibold text-gray-800">Recent Leave Requests</h3>
               <Link to="/employee/leave-history" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                 View all
@@ -150,8 +143,8 @@ function Dashboard() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-            <div className="border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+          <div className="rounded-xl border border-gray-200/80 bg-white shadow-soft overflow-hidden">
+            <div className="border-b border-gray-200/80 px-4 py-3 flex items-center justify-between bg-gray-50/50">
               <h3 className="font-semibold text-gray-800">Recent Attendance</h3>
               <Link to="/employee/attendance-history" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                 View all

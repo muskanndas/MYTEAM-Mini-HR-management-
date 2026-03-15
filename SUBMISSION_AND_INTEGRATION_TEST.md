@@ -1,6 +1,6 @@
 # Submission Checklist & Integration Test Guide
 
-**Employee Leave & Attendance Management System (Mini HR Tool)**
+**MyTeam – Leave & Attendance Management System**
 
 This document provides (1) **5 example employees** for testing, (2) an in-depth verification of functionality against the project specification, and (3) sequential UI integration test steps.
 

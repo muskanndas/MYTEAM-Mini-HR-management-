@@ -1,3 +1,5 @@
+import { HiOutlineX } from 'react-icons/hi';
+
 function Alert({ type = 'error', message, onDismiss, className = '' }) {
   if (!message) return null;
   const isSuccess = type === 'success';
@@ -6,7 +8,7 @@ function Alert({ type = 'error', message, onDismiss, className = '' }) {
     : 'border-red-200 bg-red-50 text-red-800';
   return (
     <div
-      className={`flex items-center justify-between gap-3 rounded-md border p-3 text-sm ${styles} ${className}`}
+      className={`flex items-center justify-between gap-3 rounded-lg border p-3 text-sm ${styles} ${className}`}
       role="alert"
     >
       <p className="font-medium">{message}</p>
@@ -17,9 +19,7 @@ function Alert({ type = 'error', message, onDismiss, className = '' }) {
           className="shrink-0 rounded p-1 opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-1"
           aria-label="Dismiss"
         >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <HiOutlineX className="h-4 w-4" />
         </button>
       )}
     </div>

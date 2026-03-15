@@ -1,4 +1,4 @@
-#  MYTEAM Mini HR Management System
+# MyTeam – Leave & Attendance Management System
 
 A comprehensive Employee Leave & Attendance Management System designed to streamline HR operations for small to medium-sized teams.
 
@@ -37,11 +37,14 @@ miniHRmanagementSystem/
 - **Validation**: express-validator
 - **Architecture**: Clean architecture pattern
 
-### Frontend (Planned)
-- **Framework**: React.js
+### Frontend
+- **Framework**: React.js (Vite)
+- **Language**: JavaScript
 - **Styling**: Tailwind CSS
-- **State Management**: To be implemented
-- **HTTP Client**: Axios or fetch API
+- **Routing**: React Router v6
+- **State**: React Context API (auth, toasts)
+- **HTTP Client**: Axios (with JWT interceptors)
+- **Icons**: react-icons (Heroicons)
 
 ### Database Design
 The MongoDB database uses three main collections:
@@ -122,8 +125,15 @@ The MongoDB database uses three main collections:
    # Production mode
    npm start
    ```
+   The server will start on `http://localhost:5000`.
 
-The server will start on `http://localhost:5000`
+5. **Frontend Setup** (in a new terminal)
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   The frontend will start on `http://localhost:3000` and proxy API requests to the backend.
 
 ##  Features & Functionality
 
@@ -174,7 +184,56 @@ The server will start on `http://localhost:5000`
 - **Admins**: Full access to all employee data and system features
 - Protected API routes enforce role-based access
 
-##  Development Notes
+## API Endpoints
+
+All endpoints are prefixed with `/api`. Auth-required routes need the `Authorization: Bearer <token>` header.
+
+| Method | Endpoint | Purpose |
+|--------|----------|--------|
+| POST | /api/auth/register | Register (employee); body: fullName, email, password |
+| POST | /api/auth/login | Login; body: email, password; returns token, user |
+| GET | /api/auth/profile | Current user profile (auth required) |
+| POST | /api/auth/logout | Logout |
+| POST | /api/auth/send-otp | Send OTP to email (body: email) |
+| POST | /api/auth/verify-otp | Verify OTP (body: email, otp) |
+| POST | /api/auth/reset-password | Reset password (body: email, otp, newPassword) |
+| POST | /api/leaves/apply | Apply leave (auth); body: leaveType, startDate, endDate, reason |
+| GET | /api/leaves/my-leaves | My leave list (auth) |
+| PUT | /api/leaves/:id | Update leave (auth); body: leaveType, startDate, endDate, reason |
+| DELETE | /api/leaves/:id | Delete/cancel leave (auth) |
+| POST | /api/attendance/mark | Mark attendance (auth); body: status (Present/Absent) |
+| GET | /api/attendance/my-attendance | My attendance (auth) |
+| GET | /api/attendance/all | All attendance (admin) |
+| GET | /api/admin/dashboard | Dashboard stats (admin) |
+| GET | /api/admin/leaves | All leaves; optional ?status=&employeeId= (admin) |
+| PUT | /api/admin/leaves/:leaveId | Approve/reject or update leave status (admin); body: status |
+| GET | /api/admin/users | All users (admin) |
+| GET | /api/admin/users/:userId | User by ID (admin) |
+
+## Admin Credentials
+
+Admin accounts are not created via the frontend signup. If you have a backend seed script, run it and use the seeded admin email/password to log in. Otherwise, create an admin user directly in the database with `role: 'admin'` and note the credentials for testing.
+
+## Deployment
+
+For submission, deploy both applications and add the live URLs here:
+
+- **Frontend**: (e.g. Vercel, Netlify) — _Add your frontend URL_
+- **Backend**: (e.g. Render, Railway) — _Add your backend URL_
+
+Ensure the frontend is configured to call the deployed backend API URL in production.
+
+## AI Tools Declaration
+
+This project may have used AI-assisted tools (e.g. Cursor, ChatGPT, GitHub Copilot) for scaffolding, code suggestions, and documentation. All business logic and architecture decisions were implemented with human review. AI usage is disclosed in accordance with submission guidelines.
+
+## Known Limitations
+
+- Leave reason may be required by backend validation depending on configuration.
+- OTP delivery depends on backend email setup (e.g. Nodemailer); without it, OTP may be logged server-side for testing.
+- Admin accounts must be created via database seed or manually in the database.
+
+## Development Notes
 
 ### Clean Architecture Implementation
 The project follows clean architecture principles:
@@ -200,28 +259,14 @@ RESTful API design with proper HTTP status codes:
 - **References**: Proper foreign key relationships
 - **Validation**: Schema-level data validation
 
-##  Current Status
+## Current Status
 
-###  Completed
-- Backend architecture and setup
-- Database models with clean architecture
-- MongoDB connection and configuration
-- Basic Express server setup
-- Environment configuration
-- Project structure and documentation
-
-###  In Progress
-- Authentication middleware and controllers
-- User registration and login APIs
-- Leave management APIs
-- Attendance management APIs
-- Admin seeding script
-
-###  Planned
-- Frontend React application
-- API integration and testing
-- Deployment configuration
-- Additional security features
+### Completed
+- Backend: Express API, auth (JWT, bcrypt), leave & attendance APIs, admin routes, role middleware
+- Frontend: React (Vite), Login/Signup/Forgot Password, Employee & Admin dashboards, leave & attendance flows, profile, role-based routing
+- Leave balance tracking (20 days, Total/Used/Remaining)
+- OTP send/verify and password reset
+- Responsive UI with Tailwind, toasts, and loading states
 
 ##  Contributing
 

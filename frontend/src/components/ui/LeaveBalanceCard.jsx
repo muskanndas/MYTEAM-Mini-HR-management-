@@ -10,12 +10,12 @@ function LeaveBalanceCard({ className = '' }) {
 
   return (
     <div
-      className={`rounded-lg border border-indigo-200 bg-indigo-50 p-6 ${className}`}
+      className={`rounded-xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50 to-indigo-50/70 p-6 shadow-soft ${className}`}
       role="region"
       aria-label="Leave balance"
     >
-      <h2 className="text-sm font-medium text-indigo-800">Leave Balance</h2>
-      <div className="mt-3 grid grid-cols-3 gap-4 text-center">
+      <h2 className="text-sm font-semibold text-indigo-800 uppercase tracking-wide">Leave Balance</h2>
+      <div className="mt-4 grid grid-cols-3 gap-4 text-center">
         <div>
           <p className="text-2xl font-bold text-indigo-900">{total}</p>
           <p className="text-xs text-indigo-600">Total (days)</p>

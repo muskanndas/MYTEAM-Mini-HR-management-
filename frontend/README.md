@@ -1,4 +1,4 @@
-# Mini HR - Frontend
+# MyTeam - Frontend
 
 Employee Leave & Attendance Management System — React frontend (JavaScript, Vite, Tailwind, React Router, Axios, Context API).
 
