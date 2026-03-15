@@ -1,11 +1,14 @@
 /**
  * Axios API instance with JWT and interceptors.
- * Base URL uses Vite proxy: /api -> http://localhost:5000/api
+ * Dev: /api uses Vite proxy -> localhost:5000. Prod: VITE_API_ORIGIN + /api (e.g. Render URL).
  */
 import axios from 'axios';
 
 const TOKEN_KEY = 'hr_token';
 const USER_KEY = 'hr_user';
+
+const API_ORIGIN = import.meta.env.VITE_API_ORIGIN || '';
+const baseURL = API_ORIGIN ? `${API_ORIGIN.replace(/\/$/, '')}/api` : '/api';
 
 export const getStoredToken = () => localStorage.getItem(TOKEN_KEY);
 export const setStoredToken = (token) => {
@@ -31,7 +34,7 @@ export const clearAuthStorage = () => {
 };
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
